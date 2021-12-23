@@ -16,7 +16,7 @@ fun Application.module(testing: Boolean = false) {
         playground = true
         schema {
             query("hello") {
-                resolver { -> "World" }
+                resolver {  -> "World" }
             }
         }
     }
