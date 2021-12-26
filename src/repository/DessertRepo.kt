@@ -11,7 +11,6 @@ class DessertRepo : RepositoryIntertface<Dessert> {
     override fun deleteById(id: String): Boolean {
         return try {
             initDessert.removeIf { it.id == id }
-            true
         } catch (e: Exception) {
             false
         }

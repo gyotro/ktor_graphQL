@@ -4,6 +4,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import com.example.plugins.*
 import com.apurebase.kgraphql.GraphQL
+import graphQL.dessertSchema
 import io.ktor.application.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -15,9 +16,10 @@ fun Application.module(testing: Boolean = false) {
     install(GraphQL) {
         playground = true
         schema {
-            query("hello") {
+/*            query("hello") {
                 resolver {  -> "World" }
-            }
+            }*/
+            dessertSchema()
         }
     }
 }
