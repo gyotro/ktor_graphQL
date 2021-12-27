@@ -1,32 +1,16 @@
 package repository
 
-import data.initDessert
+import com.mongodb.client.MongoClient
+import com.mongodb.client.MongoCollection
 import models.Dessert
+import org.litote.kmongo.getCollection
 
-class DessertRepo : RepositoryIntertface<Dessert> {
-    override fun getById(id: String): Dessert = initDessert.filter { it.id == id }.first()
+class DessertRepo(client: MongoClient) : RepositoryIntertface<Dessert> {
+    override lateinit var col: MongoCollection<Dessert>
 
-    override fun getAll(): List<Dessert> = initDessert
-
-    override fun deleteById(id: String): Boolean {
-        return try {
-            initDessert.removeIf { it.id == id }
-        } catch (e: Exception) {
-            false
-        }
+    init {
+        val db = client.getDatabase("testDB")
+        col = db.getCollection<Dessert>("Dessert")
     }
-
-    override fun add(entry: Dessert): Dessert {
-        initDessert.add(entry)
-        return entry
-    }
-
-    override fun update(entry: Dessert): Dessert {
-            return initDessert.find { it.id == entry.id }?.apply {
-                name = entry.name
-                description = entry.description
-                url = entry.url
-            } ?: throw Exception("No Dessert with that ID is present!!")
-        }
 
 }
