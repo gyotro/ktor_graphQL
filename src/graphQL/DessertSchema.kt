@@ -6,10 +6,10 @@ import models.DessertInput
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import repository.DessertRepo
+import services.DessertService
 
 // si definisce lo schema del nostro servizio con questa extension function
-fun SchemaBuilder.dessertSchema() {
-    val repo = DessertRepo()
+fun SchemaBuilder.dessertSchema(service: DessertService) {
 
     // Definiamo i tipi (input e output)
     inputType<DessertInput>(){
@@ -27,12 +27,11 @@ fun SchemaBuilder.dessertSchema() {
         resolver { dessertId : String ->
             getLogger().info("Retrieving dessert with id: $dessertId")
             return@resolver try {
-                return@resolver repo.getById(dessertId)
+                service.getDessert(dessertId)
             }catch (e:Exception)
             {
                 null
             }
-
         }
     })
     query( name = "desserts") {
@@ -40,12 +39,11 @@ fun SchemaBuilder.dessertSchema() {
         resolver { ->
             getLogger().info("Retrieving all desserts")
             return@resolver try {
-                repo.getAll()
+                service.getAll()
             }catch (e:Exception)
             {
                 emptyList()
             }
-
         }
     }
     mutation(name = "PostDessert") {
@@ -53,9 +51,8 @@ fun SchemaBuilder.dessertSchema() {
         resolver { dessertIn: DessertInput ->
             getLogger().info("Posting new dessert: $dessertIn")
             return@resolver try {
-                val dessert = Dessert(java.util.UUID.randomUUID().toString(), dessertIn.name , dessertIn.description, dessertIn.url)
-                // deve ritornare il dessert creato
-                repo.add(dessert)
+                val user = "gyo"
+                service.createDessert(dessertIn, user)
             }catch (e:Exception) { null }
         }
     }
@@ -63,7 +60,8 @@ fun SchemaBuilder.dessertSchema() {
         description = "delete a dessert"
         resolver { dessertId : String ->
             getLogger().info("Deleting dessert with id: $dessertId")
-            return@resolver repo.deleteById(dessertId)
+            val user = "gyo"
+            return@resolver service.deleteDessert(dessertId, user)
         }
     }
 
@@ -72,9 +70,9 @@ fun SchemaBuilder.dessertSchema() {
         resolver { id: String, dessertIn: DessertInput ->
             getLogger().info("updating dessert with id $id and body $dessertIn")
             return@resolver try {
-                val dessert = Dessert(id, dessertIn.name , dessertIn.description, dessertIn.url)
+                val user = "gyo"
                 // deve ritornare il dessert aggiornato
-                repo.update(dessert)
+                service.updateDessert(dessertIn, id, user)
             }catch (e:Exception) { null }
         }
     }

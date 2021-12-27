@@ -16,6 +16,8 @@ class DessertService : KoinComponent {
 
     fun getDessert(id: String) = repoDessert.getById(id)
 
+    fun getAll() = repoDessert.getAll()
+
     fun createDessert(entry: DessertInput, userName: String ) =
         repoDessert.add( Dessert(
             id = UUID.randomUUID().toString(),
@@ -48,7 +50,6 @@ class DessertService : KoinComponent {
                 repoDessert.update(insertDessert)
             }
             else throw Exception("Can not update item")
-        }catch (e: Exception) {throw Exception("Can not update item")}
-
+        }catch (e: Exception) { throw Exception("Can not update item") }
     }
 }

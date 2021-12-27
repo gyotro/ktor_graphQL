@@ -8,6 +8,7 @@ import di.mainModule
 import graphQL.dessertSchema
 import io.ktor.application.*
 import org.koin.core.context.startKoin
+import services.DessertService
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -22,11 +23,12 @@ fun Application.module(testing: Boolean = false) {
 
     install(GraphQL) {
         playground = true
+        val service = DessertService()
         schema {
 /*            query("hello") {
                 resolver {  -> "World" }
             }*/
-            dessertSchema()
+            dessertSchema(service)
         }
     }
 }
