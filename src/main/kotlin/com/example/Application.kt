@@ -1,14 +1,13 @@
 package com.example
 
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import com.example.plugins.*
 import com.apurebase.kgraphql.GraphQL
 import di.mainModule
+import graphQL.reviewSchema
 import graphQL.dessertSchema
 import io.ktor.application.*
 import org.koin.core.context.startKoin
 import services.DessertService
+import services.ReviewService
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -24,10 +23,12 @@ fun Application.module(testing: Boolean = false) {
     install(GraphQL) {
         playground = true
         val service = DessertService()
+        val serviceRev = ReviewService()
         schema {
 /*            query("hello") {
                 resolver {  -> "World" }
             }*/
+            reviewSchema(serviceRev)
             dessertSchema(service)
         }
     }

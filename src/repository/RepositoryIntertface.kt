@@ -38,6 +38,7 @@ interface RepositoryIntertface<T> {
     fun update(entry: Model): T {
         return try {
             col.updateOne(Model::id eq entry.id, entry)
+            // diamo in output quello che abbiamo aggiornato nella riga prima
             col.findOne(Model::id eq entry.id) ?: throw Exception ("Can't update item")
         }catch (t: Throwable) { throw Exception ("Can't update item") }
     }

@@ -3,6 +3,7 @@ package graphQL
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import models.Dessert
 import models.DessertInput
+import models.DessertsPage
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import repository.DessertRepo
@@ -34,6 +35,7 @@ fun SchemaBuilder.dessertSchema(service: DessertService) {
             }
         }
     })
+
     query( name = "desserts") {
         description = "get all desserts"
         resolver { ->
@@ -46,6 +48,20 @@ fun SchemaBuilder.dessertSchema(service: DessertService) {
             }
         }
     }
+
+    query( name = "dessertsPage") {
+        description = "get all desserts with pagination"
+        resolver { page: Int, size: Int ->
+            getLogger().info("Retrieving all desserts in a page")
+            return@resolver try {
+                service.getDessertPage(page, size)
+            }catch (e:Exception)
+            {
+                null
+            }
+        }
+    }
+
     mutation(name = "PostDessert") {
         description = "post new dessert"
         resolver { dessertIn: DessertInput ->
