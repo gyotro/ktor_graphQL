@@ -94,4 +94,4 @@ fun SchemaBuilder.dessertSchema(service: DessertService) {
     }
 }
 
-fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
+private fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)

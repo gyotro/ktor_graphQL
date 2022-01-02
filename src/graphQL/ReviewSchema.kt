@@ -4,6 +4,8 @@ import com.apurebase.kgraphql.Context
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import models.Review
 import models.ReviewInput
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import services.ReviewService
 
 fun SchemaBuilder.reviewSchema(reviewService : ReviewService) {
@@ -54,3 +56,5 @@ fun SchemaBuilder.reviewSchema(reviewService : ReviewService) {
         }
     }
 }
+
+private fun getLogger(): Logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)

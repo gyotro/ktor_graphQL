@@ -43,6 +43,8 @@ dependencies {
     implementation("io.ktor:ktor-auth:$ktor_version")
     implementation("io.ktor:ktor-auth-jwt:$ktor_version")
     implementation("at.favre.lib:bcrypt:$bcrypt_version")
+    // https://mvnrepository.com/artifact/com.auth0/java-jwt
+    implementation("com.auth0:java-jwt:3.18.2")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
 }
 kotlin.sourceSets["main"].kotlin.srcDirs("src")
