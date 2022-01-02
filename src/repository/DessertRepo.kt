@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection
 import models.Dessert
 import models.DessertsPage
 import models.PagingInfo
+import org.litote.kmongo.eq
 import org.litote.kmongo.getCollection
 
 class DessertRepo(client: MongoClient) : RepositoryIntertface<Dessert> {
@@ -28,6 +29,15 @@ class DessertRepo(client: MongoClient) : RepositoryIntertface<Dessert> {
             val pageInfo = PagingInfo( totalPages, page, next, prev )
             DessertsPage(results, pageInfo)
         }catch (e: Exception) { throw Exception("Can't get required page!") }
+    }
+
+    fun getDessertByUserId(id: String): List<Dessert>
+    {
+        return try {
+            col.find(Dessert::id eq id).asIterable().map { it }
+        }catch (e: Exception) {
+            throw Exception("Can not get user desserts!")
+        }
     }
 
 }
