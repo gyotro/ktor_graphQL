@@ -1,6 +1,8 @@
 package graphQL
 
+import com.apurebase.kgraphql.Context
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
+import io.ktor.application.*
 import models.Dessert
 import models.DessertInput
 import models.User
@@ -22,8 +24,10 @@ fun SchemaBuilder.authSchema(authService: AuthService) {
 
     mutation("signIn") {
         description = "Authenticate an existing User"
-        resolver { userInput: userInput ->
-             try { authService.signIn(userInput)
+        resolver { userInput: userInput, ctx:Context ->
+             try {
+                 ctx.get<ApplicationCall>()?.application?.environment?.log?.info("Logging signIn...")
+                 authService.signIn(userInput)
             } catch (e: Exception) {null}
         }
     }

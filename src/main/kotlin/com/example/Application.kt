@@ -2,15 +2,14 @@ package com.example
 
 import com.apurebase.kgraphql.GraphQL
 import di.mainModule
-import graphQL.reviewSchema
-import graphQL.authSchema
-import graphQL.reviewSchema
-import graphQL.dessertSchema
+import graphQL.*
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.http.auth.*
 import org.koin.core.context.startKoin
 import services.AuthService
 import services.DessertService
+import services.ProfileService
 import services.ReviewService
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -25,10 +24,21 @@ fun Application.module(testing: Boolean = false) {
     }
 
     install(GraphQL) {
-        playground = true
         val service = DessertService()
         val serviceRev = ReviewService()
         val authService = AuthService()
+        val profileervice = ProfileService()
+        playground = true
+        /*
+            settiamo il contesto della chiamata con ciò che restituisce la verifyToken, ovvero un User?
+           il log della chiamata
+           la chiamata stessa
+         */
+        context {
+                call: ApplicationCall -> authService.verifyToken(call)?.let { +it }
+            +log
+            +call
+        }
         schema {
 /*            query("hello") {
                 resolver {  -> "World" }
@@ -36,6 +46,7 @@ fun Application.module(testing: Boolean = false) {
             reviewSchema(serviceRev)
             dessertSchema(service)
             authSchema(authService)
+            profileSchema(profileervice)
         }
     }
 }

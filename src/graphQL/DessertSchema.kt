@@ -1,9 +1,11 @@
 package graphQL
 
+import com.apurebase.kgraphql.Context
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import models.Dessert
 import models.DessertInput
 import models.DessertsPage
+import models.User
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import repository.DessertRepo
@@ -64,29 +66,29 @@ fun SchemaBuilder.dessertSchema(service: DessertService) {
 
     mutation(name = "PostDessert") {
         description = "post new dessert"
-        resolver { dessertIn: DessertInput ->
+        resolver { dessertIn: DessertInput, ctx: Context ->
             getLogger().info("Posting new dessert: $dessertIn")
             return@resolver try {
-                val user = "gyo"
+                val user = ctx.get<User>()?.id ?: error("User not signed In!")
                 service.createDessert(dessertIn, user)
             }catch (e:Exception) { null }
         }
     }
     mutation(name = "deleteDessert") {
         description = "delete a dessert"
-        resolver { dessertId : String ->
+        resolver { dessertId : String, ctx: Context ->
             getLogger().info("Deleting dessert with id: $dessertId")
-            val user = "gyo"
+            val user = ctx.get<User>()?.id ?: error("User not signed In!")
             return@resolver service.deleteDessert(dessertId, user)
         }
     }
 
     mutation(name = "updateDessert") {
         description = "update a dessert"
-        resolver { id: String, dessertIn: DessertInput ->
+        resolver { id: String, dessertIn: DessertInput, ctx: Context ->
             getLogger().info("updating dessert with id $id and body $dessertIn")
             return@resolver try {
-                val user = "gyo"
+                val user = ctx.get<User>()?.id ?: error("User not signed In!")
                 // deve ritornare il dessert aggiornato
                 service.updateDessert(dessertIn, id, user)
             }catch (e:Exception) { null }

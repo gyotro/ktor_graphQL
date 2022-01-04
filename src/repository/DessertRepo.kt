@@ -39,5 +39,4 @@ class DessertRepo(client: MongoClient) : RepositoryIntertface<Dessert> {
             throw Exception("Can not get user desserts!")
         }
     }
-
 }

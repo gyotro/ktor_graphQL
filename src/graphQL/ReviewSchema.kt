@@ -4,6 +4,7 @@ import com.apurebase.kgraphql.Context
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import models.Review
 import models.ReviewInput
+import models.User
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import services.ReviewService
@@ -31,17 +32,17 @@ fun SchemaBuilder.reviewSchema(reviewService : ReviewService) {
         resolver { dessertId: String, reviewIn: ReviewInput, ctx: Context ->
             getLogger().info("Posting new dessert: $reviewIn")
             return@resolver try {
-                val user = "gyo"
+                val user = ctx.get<User>()?.id ?: error("User not signed In!")
                 reviewService.addReview(user, dessertId, reviewIn)
             }catch (e:Exception) { null }
         }
     }
     mutation(name = "updateReview") {
         description = "update existing review"
-        resolver { reviewId: String, entry: ReviewInput ->
+        resolver { reviewId: String, entry: ReviewInput, ctx: Context ->
             getLogger().info("Posting new dessert: $entry")
             return@resolver try {
-                val user = "gyo"
+                val user = ctx.get<User>()?.id ?: error("User not signed In!")
                 reviewService.updateReview(user, reviewId, entry)
             }catch (e:Exception) { null }
         }
@@ -49,8 +50,8 @@ fun SchemaBuilder.reviewSchema(reviewService : ReviewService) {
     mutation(name = "deleteReview") {
         description = "delete review"
         resolver {
-                id: String -> try {
-            val user = "gyo"
+                id: String, ctx: Context -> try {
+            val user = ctx.get<User>()?.id ?: error("User not signed In!")
             reviewService.deleteReview(id, user)
         }catch (e: Exception) { false }
         }
