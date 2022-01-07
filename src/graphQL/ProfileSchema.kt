@@ -16,6 +16,7 @@ fun SchemaBuilder.profileSchema(profileService: ProfileService) {
     }
 
     query("getProfile") {
+        description = "Profile User Query"
         resolver { ctx: Context ->
             return@resolver try {
                 // in quesot modo prendiamo l'utenza dal contesto

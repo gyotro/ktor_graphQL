@@ -9,6 +9,7 @@ val bcrypt_version: String by project
 plugins {
     application
     kotlin("jvm") version "1.6.10"
+    id("com.github.johnrengelman.shadow") version ("7.1.2")
 }
 
 group = "com.exampleGraphql"
@@ -22,6 +23,7 @@ repositories {
     jcenter()
 }
 
+// task per l'esecuzione dello shadow plugin
 tasks.withType<Jar> {
     manifest {
         attributes(

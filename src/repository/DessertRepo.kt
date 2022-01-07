@@ -34,7 +34,7 @@ class DessertRepo(client: MongoClient) : RepositoryIntertface<Dessert> {
     fun getDessertByUserId(id: String): List<Dessert>
     {
         return try {
-            col.find(Dessert::id eq id).asIterable().map { it }
+            col.find(Dessert::userId eq id).asIterable().map { it }
         }catch (e: Exception) {
             throw Exception("Can not get user desserts!")
         }
